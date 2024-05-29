@@ -1,6 +1,6 @@
 const express = require("express");
 const { userModel } = require("./model/User");
-const { hash, genSalt } = require("bcrypt");
+const { hash, genSalt, compare } = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { connect } = require("mongoose");
 const { config } = require("dotenv");
@@ -13,11 +13,29 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.json())
 
 app.post("/api/v1/signin", async (req, res) => {
+  try {
+
   const { email, password } = req.body;
 
-  const user = await userModel.find({email: email})
-  console.log(user);
+  const user = await userModel.findOne({email: email})
 
+  const resp = await compare(password, user.password)
+
+  if (!resp)
+      return res.status(401).json({error: "user not found"})
+
+  const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+
+
+  return res.status(200).json({
+    ... user._doc, 
+     token,
+      password: undefined
+    })
+
+  } catch(e) {
+    return res.status(400).json({error: "user not found"})
+  }
 });
 
 app.post("/api/v1/signup", async (req, res) => {
