@@ -4,6 +4,8 @@ const { config } = require("dotenv");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const authRoutes = require("./Routes/auth");
+const watchListRouter = require("./Routes/watchList");
+const verifyToken = require("./Middleware/auth");
 
 config();
 
@@ -14,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/api/v1", authRoutes)
-
+app.use("/api/v1/watchlist",verifyToken, watchListRouter )
 app.use("/", (req, res) => {
   res.send("<h1> Server is running on 3001 </h1>");
 });

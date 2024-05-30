@@ -1,17 +1,25 @@
-const { Schema, Model } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const watchListSchema = new Schema({
+const watchListSchema = Schema({
+    user: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         unique: true,
         required: true
-    }
+    },
+    isPublic: {
+        type: Boolean,
+        default: false
+    },
     movies: {
         type: Array,
         default: []
     }
 })
 
-const WatchListModel = new Model("WatchList", watchListSchema)
+const WatchListModel = model("WatchList", watchListSchema)
 
 module.exports = WatchListModel
