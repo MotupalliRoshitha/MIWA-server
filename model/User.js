@@ -17,6 +17,10 @@ const userSchema = Schema({
     password: {
         type: String,
         required: true
+    },
+    watchLists: {
+        type: Array,
+        default: []
     }
 })
 
