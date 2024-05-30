@@ -6,9 +6,9 @@ const createList = async (req, res) => {
     const user = req.verifiedUser
     console.log({name,user});
     const newList = watchListModel({ name, user });
-    const savedList = await newList.save();
-
-    res.status(200).json(savedList);
+    await newList.save();
+    const returnList = await watchListModel.find({user})
+    res.status(200).json({result: returnList});
   } catch (e) {
     console.log(e);
     res.status(400).json({ error: "internal server error" });
@@ -48,12 +48,36 @@ const deleteList = async (req, res) => {
     const list = await watchListModel.findById(listId)
     if (list.user === userId) {
       await watchListModel.findByIdAndDelete(listId)
-      return res.status(201).json({message: "success"})
     }
-    return res.status(201).json({message: "failed"})
+    const lists = await watchListModel.find({user: userId})
+    return res.status(201).json({result: lists})
   } catch (e) {
     console.log(e);
     return res.status(400).json({error: "internal server error"})
+  }
+}
+
+const changePublic = async (req,res) => {
+  try {
+    const userId = req.verifiedUser
+    const {listId} = req.params
+    const list = await watchListModel.findById(listId)
+
+    if (list.user === userId) {
+      const newPublicValue = !list.isPublic
+      await watchListModel.updateOne(
+        { _id: listId},
+        { $set: {isPublic: newPublicValue}}
+      )
+      const newList = await watchListModel.findById(listId)
+      return res.status(400).json(newList)
+    }
+    
+    return res.status(400).json({error: "some error"})
+    
+  } catch (e) {
+   console.log(e);
+   return res.status(400).json({error: "internal server error"}) 
   }
 }
 
@@ -96,4 +120,4 @@ const removeMovie = async (req, res) => {
   }
 }
 
-module.exports = [createList, getList, getAllLists, deleteList, addMovie, removeMovie, deleteList];
+module.exports = [createList, getList, getAllLists, deleteList, addMovie, removeMovie,changePublic];
