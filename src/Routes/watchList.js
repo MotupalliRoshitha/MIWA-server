@@ -8,6 +8,6 @@ watchListRouter.get("/:listId",getList)
 watchListRouter.put("/:listId", changePublic)
 watchListRouter.delete("/:listId",deleteList)
 watchListRouter.put("/:listId/:movieId", addMovie)
-watchListRouter.patch("/:listId/:movieId", removeMovie)
+watchListRouter.delete("/:listId/:movieId", removeMovie)
 
 module.exports = watchListRouter

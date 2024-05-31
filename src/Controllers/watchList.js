@@ -69,8 +69,8 @@ const changePublic = async (req,res) => {
         { _id: listId},
         { $set: {isPublic: newPublicValue}}
       )
-      const newList = await watchListModel.findById(listId)
-      return res.status(400).json(newList)
+      const newList = await watchListModel.find({user: userId})
+      return res.status(200).json(newList)
     }
     
     return res.status(400).json({error: "some error"})
@@ -110,7 +110,8 @@ const removeMovie = async (req, res) => {
       { _id: listId },
       { $pull: { movies: movieId } }
     );
-    return res.status(200).json({msg: "success"})
+    const fullList = await watchListModel.findById(listId)
+    return res.status(200).json(fullList)
     }
     return res.status(200).json({msg: "fail"})
 
