@@ -3,9 +3,9 @@ const { connect } = require("mongoose");
 const { config } = require("dotenv");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const authRoutes = require("./Routes/auth");
-const watchListRouter = require("./Routes/watchList");
-const verifyToken = require("./Middleware/auth");
+const authRoutes = require("./src/Routes/auth");
+const watchListRouter = require("./src/Routes/watchList");
+const verifyToken = require("./src/Middleware/auth");
 
 config();
 

@@ -4,7 +4,6 @@ const createList = async (req, res) => {
   try {
     const {name} = req.query;
     const user = req.verifiedUser
-    console.log({name,user});
     const newList = watchListModel({ name, user });
     await newList.save();
     const returnList = await watchListModel.find({user})
@@ -33,7 +32,6 @@ const getAllLists = async (req, res) => {
   try {
     const userId = req.verifiedUser
     const lists = await watchListModel.find({user: userId})
-    console.log(lists);
     return res.status(200).json({result: lists})
   } catch (e) {
     console.log(e);
